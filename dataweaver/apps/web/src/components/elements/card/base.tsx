@@ -81,7 +81,13 @@ export const CardBase = ({
         selection === 'none'
           ? (event) => {
               if (event.button !== 0) return;
-              if (event.shiftKey || event.ctrlKey || event.metaKey || event.altKey) return;
+              if (
+                event.shiftKey ||
+                event.ctrlKey ||
+                event.metaKey ||
+                event.altKey
+              )
+                return;
               if (editor.getCurrentToolId() !== 'select') return;
               event.stopPropagation();
               editor.select(id);
