@@ -1,8 +1,8 @@
 import { useEditor, useValue } from 'tldraw';
 import { Button } from '~/components/elements/button';
 import { IconCursor } from '~/components/primitives/icons/cursor';
-import { IconPanTool } from '~/components/primitives/icons/pan_tool';
 import { IconInsertText } from '~/components/primitives/icons/insert_text';
+import { IconPanTool } from '~/components/primitives/icons/pan_tool';
 import s from './tools.module.scss';
 
 const TOOLS = {
