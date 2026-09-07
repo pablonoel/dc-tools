@@ -11,8 +11,8 @@
 }
 
 .icon-status {
-  width: 24px;
-  height: 24px;
+  width: var(--icon-size-small);
+  height: var(--icon-size-small);
   color: rgb(var(--color-control-content));
 }
 
