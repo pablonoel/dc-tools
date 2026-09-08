@@ -142,10 +142,15 @@ export const CardBase = ({
         // stays selectable/highlightable. While multi-selected we let events
         // through so tldraw keeps handling multi-select/drag; while
         // unselected we also let them through, for the cases the article's
-        // own pointerdown handler doesn't cover (hand tool, modifier-click)
+        // own pointerdown handler doesn't cover (hand tool, modifier-click).
+        // Only for the select tool — with a non-select tool (e.g. hand) the
+        // card should behave like any other shape, so pan still works over it.
         onPointerDown={
           selection === 'single'
-            ? (event) => event.stopPropagation()
+            ? (event) => {
+                if (editor.getCurrentToolId() !== 'select') return;
+                event.stopPropagation();
+              }
             : undefined
         }
       >
