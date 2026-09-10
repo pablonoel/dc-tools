@@ -99,6 +99,9 @@ export const CardBase = ({
         className={s['actions-container']}
         onPointerDown={selection !== 'none' ? startDragging : undefined}
       >
+        <IconDragIndicator
+          className={`${s['icon-drag-indicator']} ${s['icon-drag-indicator-left']}`}
+        />
         {actions.map((action, index) => (
           <Button
             key={index}
@@ -114,7 +117,9 @@ export const CardBase = ({
             isDisabled={action.isDisabled}
           />
         ))}
-        <IconDragIndicator className={s['icon-drag-indicator']} />
+        <IconDragIndicator
+          className={`${s['icon-drag-indicator']} ${s['icon-drag-indicator-right']}`}
+        />
       </div>
 
       <div

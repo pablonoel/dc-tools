@@ -39,7 +39,6 @@
   .icon-drag-indicator {
     position: absolute;
     top: calc(var(--actions-height) / 2);
-    right: 12px;
     width: 18px;
     height: 18px;
     color: rgb(var(--color-card-action-content-muted));
@@ -49,6 +48,14 @@
       width: 20px;
       height: 20px;
     }
+  }
+
+  .icon-drag-indicator-left {
+    left: 12px;
+  }
+
+  .icon-drag-indicator-right {
+    right: 12px;
   }
 }
 
