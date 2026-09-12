@@ -4,14 +4,14 @@ export const IconUpload = (props: ComponentPropsWithRef<'svg'>) => {
   return (
     <svg
       {...props}
-      viewBox="0 0 24 24"
+      viewBox="0 -960 960 960"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
       aria-hidden="true"
     >
       <path
         fill="currentColor"
-        d="M11 16V7.85L8.4 10.45 7 9l5-5 5 5-1.4 1.45-2.6-2.6V16ZM6 20q-.825 0-1.413-.588T4 18v-3h2v3h12v-3h2v3q0 .825-.588 1.413T18 20H6Z"
+        d="M480-800 280-600l56 58 104-104v326h80v-326l104 104 56-58-200-200ZM240-160q-33 0-56.5-23.5T160-240v-120h80v120h480v-120h80v120q0 33-23.5 56.5T720-160H240Z"
       />
     </svg>
   );

@@ -1,5 +1,5 @@
 import { Button } from '~/components/elements/button';
-import { IconUpload } from '~/components/primitives/icons/upload';
+import { IconDownload } from '~/components/primitives/icons/download';
 import s from './control.module.scss';
 
 interface ControlProps {
@@ -12,7 +12,7 @@ export const Control = ({ id, isOpen, onToggle }: ControlProps) => {
   return (
     <Button
       className={s['button-import']}
-      icon={IconUpload}
+      icon={IconDownload}
       size="large"
       variant="flat"
       tone="control"
