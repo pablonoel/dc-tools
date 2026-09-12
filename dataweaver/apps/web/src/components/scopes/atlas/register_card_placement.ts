@@ -121,6 +121,33 @@ interface NextSlotResult {
   cursor: GridCursor;
 }
 
+/**
+ * Bottom edge of the lowest card on the canvas, or null with no cards. A new
+ * row always starts here, never beside a locally computed row height — the
+ * cursor's tracked row can go stale (re-rooted on whichever card the user
+ * last dragged, which may sit higher than others), so this is the one floor
+ * a fresh row can rely on to clear every pre-existing card.
+ */
+const canvasFloorY = (editor: Editor): number | null => {
+  let floor: number | null = null;
+
+  for (const shape of editor.getCurrentPageShapes()) {
+    if (shape.type !== 'card') continue;
+
+    const bottom = shape.y + shape.props.h;
+    if (floor === null || bottom > floor) floor = bottom;
+  }
+
+  return floor;
+};
+
+/** Whether two card-sized rectangles overlap at all. */
+const boundsOverlap = (a: CardBounds, b: CardBounds): boolean => {
+  return (
+    a.x < b.x + b.w && a.x + a.w > b.x && a.y < b.y + b.h && a.y + a.h > b.y
+  );
+};
+
 /** Calculate position for a card about to be created + its updated cursor. */
 const nextSlot = (
   editor: Editor,
@@ -155,28 +182,42 @@ const nextSlot = (
     };
   }
 
-  // Room in the row: place against the previous card's right edge
+  // Room in the row: place against the previous card's right edge — but only
+  // if nothing the cursor lost track of (e.g. a card dragged into that gap)
+  // sits there. If it does, fall through to a fresh row below everything.
   if (latestCursor.row.length < columns) {
     const previousBounds = rowLast.bounds;
     const position = {
       x: previousBounds.x + previousBounds.w + gutter,
       y: rowFirst.bounds.y,
     };
-    return {
-      position,
-      cursor: {
-        ...latestCursor,
-        row: [...latestCursor.row, entry(position)],
-        gridIds: [...latestCursor.gridIds, id],
-      },
-    };
+    const candidate: CardBounds = { ...position, ...size };
+    const blocked = editor.getCurrentPageShapes().some((shape) => {
+      if (shape.type !== 'card' || latestCursor.gridIds.includes(shape.id)) {
+        return false;
+      }
+      return boundsOverlap(candidate, mapShapeToBounds(shape));
+    });
+
+    if (!blocked) {
+      return {
+        position,
+        cursor: {
+          ...latestCursor,
+          row: [...latestCursor.row, entry(position)],
+          gridIds: [...latestCursor.gridIds, id],
+        },
+      };
+    }
   }
 
-  // Row full: wrap to a new row just below the tallest card of this row
-  const tallest = Math.max(...latestCursor.row.map(({ bounds }) => bounds.h));
+  // Row full, or the in-row slot is blocked: start a new row below the
+  // lowest card on the canvas — always below it, never beside or on top of
+  // one, regardless of what the tracked row's own height would suggest.
+  const floor = canvasFloorY(editor) ?? rowFirst.bounds.y;
   const position = {
     x: latestCursor.rowStartX,
-    y: rowFirst.bounds.y + tallest + gutter,
+    y: floor + gutter,
   };
   return {
     position,
