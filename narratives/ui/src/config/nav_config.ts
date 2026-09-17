@@ -8,8 +8,16 @@ export interface NavItem {
   id: string;
   /** Human-readable tab label shown in the header. */
   label: string;
-  /** Hash href the tab links to, e.g. `#/metrics`. */
+  /** Hash href the tab links to, e.g. `#/metrics`. Unused when `postTo` is set. */
   href: string;
+  /**
+   * External URL to POST to instead of navigating via `href`. Renders the tab
+   * as a form submit (new tab) so the target can read `postData` from the
+   * request body — a plain `<a href>` can only send a GET.
+   */
+  postTo?: string;
+  /** Form fields sent in the POST body when `postTo` is set. */
+  postData?: Record<string, string>;
 }
 
 /**
@@ -23,6 +31,13 @@ export const NAV_CONFIG: NavItem[] = [
   { id: "metrics", label: "Key Metrics Dashboard", href: "#/metrics" },
   { id: "download", label: "Data Download Tool", href: "#/download" },
   { id: "statvar", label: "Statistical Variable Explorer", href: "#/statvar" },
+  {
+    id: "intro",
+    label: "Classic Search Demo",
+    href: "",
+    postTo: "http://localhost:8080/",
+    postData: { intro: "true" },
+  },
 ];
 
 /**

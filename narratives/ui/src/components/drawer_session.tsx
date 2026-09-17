@@ -13,6 +13,7 @@ import {
   formatRelativeTime,
   useChatSession,
 } from "../hooks/chat_session_context";
+import { usePageTransition } from "../hooks/page_transition_context";
 
 /**
  * SessionDrawer renders two distinct layouts behind one trigger; only one is
@@ -63,6 +64,7 @@ export function SessionDrawer() {
     isDrawerOpen,
     closeDrawer,
   } = useChatSession();
+  const { fadeOutAndSubmit } = usePageTransition();
 
   // Which level the MOBILE panel is showing. Reset to "menu" whenever the
   // drawer closes so the next open always starts at the top level.
@@ -208,14 +210,8 @@ export function SessionDrawer() {
             <nav className="flex flex-col py-2 shrink-0" aria-label="Sections">
               {navItems.map((item) => {
                 const active = item.id === activeId;
-                return (
-                  <a
-                    key={item.id}
-                    href={item.href}
-                    aria-current={active ? "page" : undefined}
-                    onClick={close}
-                    className="w-full flex items-center gap-3 px-4 py-3 no-underline bg-transparent cursor-pointer hover:bg-surface-soft transition-colors"
-                  >
+                const rowContent = (
+                  <>
                     <span
                       aria-hidden="true"
                       className="flex justify-center shrink-0"
@@ -239,6 +235,43 @@ export function SessionDrawer() {
                     >
                       {item.label}
                     </span>
+                  </>
+                );
+
+                if (item.postTo) {
+                  return (
+                    <form
+                      key={item.id}
+                      method="post"
+                      action={item.postTo}
+                      onSubmit={(e) => {
+                        e.preventDefault();
+                        close();
+                        fadeOutAndSubmit(e.currentTarget);
+                      }}
+                    >
+                      {Object.entries(item.postData ?? {}).map(([name, value]) => (
+                        <input key={name} type="hidden" name={name} value={value} />
+                      ))}
+                      <button
+                        type="submit"
+                        className="w-full flex items-center gap-3 px-4 py-3 bg-transparent cursor-pointer hover:bg-surface-soft transition-colors text-left"
+                      >
+                        {rowContent}
+                      </button>
+                    </form>
+                  );
+                }
+
+                return (
+                  <a
+                    key={item.id}
+                    href={item.href}
+                    aria-current={active ? "page" : undefined}
+                    onClick={close}
+                    className="w-full flex items-center gap-3 px-4 py-3 no-underline bg-transparent cursor-pointer hover:bg-surface-soft transition-colors"
+                  >
+                    {rowContent}
                   </a>
                 );
               })}
