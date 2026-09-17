@@ -15,6 +15,7 @@ import {
   ChatSessionProvider,
   useChatSession,
 } from "./hooks/chat_session_context";
+import { PageTransitionProvider } from "./hooks/page_transition_context";
 import { useHashRoute } from "./hooks/use_hash_route";
 
 /** Picks the main view for the current hash route; unknown routes fall back to the Data Agent. */
@@ -37,17 +38,19 @@ export function App() {
 
   return (
     <BrandingProvider>
-      <ChatSessionProvider>
-        <ChatResetOnTabChange route={route} />
-        <div className="flex h-screen w-full bg-surface overflow-hidden relative">
-          <Sidebar />
-          <SessionDrawer />
-          <main className="flex-1 flex flex-col h-full relative min-w-0">
-            <Header />
-            {renderContent(route)}
-          </main>
-        </div>
-      </ChatSessionProvider>
+      <PageTransitionProvider>
+        <ChatSessionProvider>
+          <ChatResetOnTabChange route={route} />
+          <div className="flex h-screen w-full bg-surface overflow-hidden relative">
+            <Sidebar />
+            <SessionDrawer />
+            <main className="flex-1 flex flex-col h-full relative min-w-0">
+              <Header />
+              {renderContent(route)}
+            </main>
+          </div>
+        </ChatSessionProvider>
+      </PageTransitionProvider>
     </BrandingProvider>
   );
 }

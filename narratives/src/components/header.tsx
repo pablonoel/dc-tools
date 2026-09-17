@@ -9,6 +9,7 @@ import { useHashRoute } from "../hooks/use_hash_route";
 import { useChatSession } from "../hooks/chat_session_context";
 import type { TokenUsage } from "../hooks/use_sse_chat";
 import { useBrand } from "../hooks/branding_context";
+import { usePageTransition } from "../hooks/page_transition_context";
 
 /**
  * Reports whether the temporary token-usage readout is enabled — i.e. the page
@@ -26,6 +27,7 @@ export function Header() {
   // Empty route → Agent (the default landing view).
   const activeId = route || "agent";
   const { toggleDrawer, isDrawerOpen, turns } = useChatSession();
+  const { fadeOutAndSubmit } = usePageTransition();
 
   // Latest turn that reported usage wins (later turns override earlier ones).
   const latestUsage = isTokenDebugEnabled()
@@ -62,16 +64,39 @@ export function Header() {
       <nav className="flex items-center gap-4 md:gap-6 lg:gap-8 text-label-large text-on-surface-variant ml-auto whitespace-nowrap overflow-x-auto no-scrollbar">
         {NAV_CONFIG.map((item) => {
           const isActive = item.id === activeId;
+          // Hidden below lg — on mobile these tabs live in the side drawer
+          // (SessionDrawer) instead, so the header nav stays uncluttered.
+          const tabClassName = `relative py-1 shrink-0 transition-colors hidden lg:block ${
+            isActive ? "font-medium text-brand-primary" : "hover:text-on-surface"
+          }`;
+
+          if (item.postTo) {
+            return (
+              <form
+                key={item.id}
+                method="post"
+                action={item.postTo}
+                onSubmit={(e) => {
+                  e.preventDefault();
+                  fadeOutAndSubmit(e.currentTarget);
+                }}
+              >
+                {Object.entries(item.postData ?? {}).map(([name, value]) => (
+                  <input key={name} type="hidden" name={name} value={value} />
+                ))}
+                <button type="submit" className={`${tabClassName} bg-transparent cursor-pointer`}>
+                  {item.label}
+                </button>
+              </form>
+            );
+          }
+
           return (
             <a
               key={item.id}
               href={item.href}
               aria-current={isActive ? "page" : undefined}
-              // Hidden below lg — on mobile these tabs live in the side drawer
-              // (SessionDrawer) instead, so the header nav stays uncluttered.
-              className={`relative py-1 shrink-0 transition-colors hidden lg:block ${
-                isActive ? "font-medium text-brand-primary" : "hover:text-on-surface"
-              }`}
+              className={tabClassName}
             >
               {item.label}
               {isActive && (
