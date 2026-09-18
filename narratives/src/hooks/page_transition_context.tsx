@@ -1,10 +1,25 @@
 /**
- * @fileoverview Full-page fade-to-blank transition used before navigating
- * away to an external URL (e.g. the POST-based "Intro" nav tab), so leaving
- * the app doesn't snap-cut into the next site's blank load.
+ * @fileoverview Full-page fade transition, both directions:
+ *  - OUT: fades to blank before navigating away (e.g. the POST-based
+ *    "Classic Search Demo" nav tab), so leaving doesn't snap-cut.
+ *  - IN: if this page was itself opened with `?intro=true`, starts blank
+ *    and fades the content in on mount — the receiving-side counterpart.
+ *
+ * A static page can't read the body of the POST that loaded it (the
+ * browser doesn't expose that to client JS on a full navigation). To
+ * trigger the fade-IN from a POST, the destination's server must do a
+ * POST → redirect → GET (PRG): read `intro` off the request body, then
+ * 302 to `/?intro=true` so this can pick it up from the query string.
  */
 
-import { createContext, useContext, useRef, useState, type ReactNode } from "react";
+import {
+  createContext,
+  useContext,
+  useEffect,
+  useRef,
+  useState,
+  type ReactNode,
+} from "react";
 
 /** Fade duration in ms — kept in sync with the inline `transitionDuration` below. */
 const FADE_MS = 300;
@@ -18,13 +33,28 @@ const PageTransitionContext = createContext<PageTransitionContextValue | null>(n
 
 /** Wraps the app; renders the fade overlay and exposes `usePageTransition`. */
 export function PageTransitionProvider({ children }: { children: ReactNode }) {
-  const [fading, setFading] = useState(false);
+  const introRequested = useRef(
+    typeof window !== "undefined" &&
+      new URLSearchParams(window.location.search).get("intro") === "true"
+  ).current;
+
+  // Start opaque (blank) when `?intro=true` so there's something to fade
+  // IN from; otherwise start transparent, as before.
+  const [fading, setFading] = useState(introRequested);
   const pendingForm = useRef<HTMLFormElement | null>(null);
 
   const fadeOutAndSubmit = (form: HTMLFormElement) => {
     pendingForm.current = form;
     setFading(true);
   };
+
+  // Reveal the page a frame after mount so the initial opaque state above
+  // actually paints before the opacity transition kicks in.
+  useEffect(() => {
+    if (!introRequested) return;
+    const id = requestAnimationFrame(() => setFading(false));
+    return () => cancelAnimationFrame(id);
+  }, [introRequested]);
 
   return (
     <PageTransitionContext.Provider value={{ fadeOutAndSubmit }}>
