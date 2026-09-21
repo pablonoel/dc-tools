@@ -64,7 +64,7 @@ export function SessionDrawer() {
     isDrawerOpen,
     closeDrawer,
   } = useChatSession();
-  const { fadeOutAndSubmit } = usePageTransition();
+  const { fadeOutAndSubmit, fadeOnClick } = usePageTransition();
 
   // Which level the MOBILE panel is showing. Reset to "menu" whenever the
   // drawer closes so the next open always starts at the top level.
@@ -268,7 +268,10 @@ export function SessionDrawer() {
                     key={item.id}
                     href={item.href}
                     aria-current={active ? "page" : undefined}
-                    onClick={close}
+                    onClick={(e) => {
+                      close();
+                      fadeOnClick(e);
+                    }}
                     className="w-full flex items-center gap-3 px-4 py-3 no-underline bg-transparent cursor-pointer hover:bg-surface-soft transition-colors"
                   >
                     {rowContent}

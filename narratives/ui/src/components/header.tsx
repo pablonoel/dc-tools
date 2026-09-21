@@ -28,7 +28,7 @@ export function Header() {
   // Empty route → Agent (the default landing view).
   const activeId = route || "agent";
   const { toggleDrawer, isDrawerOpen, turns } = useChatSession();
-  const { fadeOutAndSubmit } = usePageTransition();
+  const { fadeOutAndSubmit, fadeOnClick } = usePageTransition();
 
   // Latest turn that reported usage wins (later turns override earlier ones).
   const latestUsage = isTokenDebugEnabled()
@@ -108,6 +108,7 @@ export function Header() {
               key={item.id}
               href={item.href}
               aria-current={isActive ? "page" : undefined}
+              onClick={fadeOnClick}
               className={tabClassName}
             >
               {item.label}

@@ -34,9 +34,7 @@ export const NAV_CONFIG: NavItem[] = [
   {
     id: "intro",
     label: "Classic Search Demo",
-    href: "",
-    postTo: "http://localhost:8080/",
-    postData: { intro: "true" },
+    href: "http://localhost:8080/explore?enable_feature=enable_stat_var_autocomplete&intro=true#q=jobs%20in%20texas",
   },
 ];
 

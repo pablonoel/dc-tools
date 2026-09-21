@@ -43,7 +43,7 @@
   /* Hero-gradient stops (the "Data Agent" heading). Brand-driven via
      branding.json's colors.gradient_start / colors.gradient_end; the literals
      after the comma are the shipped design fallback (green → teal). */
-  --color-brand-gradient-start: var(--brand-gradient-start, #65A782);
+  --color-brand-gradient-start: var(--brand-gradient-start, #0751B3);
   --color-brand-gradient-end: var(--brand-gradient-end, #6FAEC0);
 
   /* Surfaces */
