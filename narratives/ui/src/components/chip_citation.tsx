@@ -38,8 +38,6 @@ import { Tooltip } from "./tooltip";
  * disagree.
  */
 
-const COLOR = "var(--color-theme-primary)";
-
 /** How one answer's citations are labelled and anchored on the page. */
 export interface CitationNumbering {
   /** Display label for each provenance position: `numbers[n - 1]` labels `[n]`. */
@@ -138,8 +136,7 @@ export function CitationChip({
           target.scrollIntoView({ behavior: "smooth", block: "center" });
         }
       }}
-      className="font-medium no-underline hover:underline"
-      style={{ color: COLOR, fontWeight: 500 }}
+      className="font-medium text-theme-primary no-underline hover:underline"
       // The number alone tells a screen-reader user nothing about where the
       // claim came from; the visible tooltip's text belongs here too.
       aria-label={citationAriaLabel(n, shown, sources)}

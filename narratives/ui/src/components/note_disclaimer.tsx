@@ -27,11 +27,6 @@ import { GeminiInfoIcon } from './icons';
  * inside the text — we collapse it back to a regular space.
  */
 
-const COLOR_TEXT = '#5C5F5E';
-const COLOR_DIVIDER = 'var(--color-border)';
-const FONT_STACK =
-  '"Google Sans Text", "Google Sans", Inter, system-ui, sans-serif';
-
 interface DisclaimerNoteProps {
   text?: string;
 }
@@ -50,25 +45,13 @@ export function DisclaimerNote({
 }: DisclaimerNoteProps) {
   return (
     <section
-      className="flex flex-col gap-1.5"
-      style={{ alignSelf: 'stretch' }}
+      className="flex flex-col gap-1.5 self-stretch"
       aria-label="Disclaimer"
     >
-      <hr style={{ border: 0, borderTop: `1px solid ${COLOR_DIVIDER}` }} />
+      <hr className="border-border" />
       <div className="flex items-start gap-2.5 pt-2.5">
-        <GeminiInfoIcon size="xs" style={{ flexShrink: 0, marginTop: 4 }} />
-        <p
-          className="m-0"
-          style={{
-            fontFamily: FONT_STACK,
-            fontSize: 16,
-            lineHeight: '24px',
-            fontWeight: 400,
-            color: COLOR_TEXT,
-          }}
-        >
-          {text}
-        </p>
+        <GeminiInfoIcon size="xs" className="mt-1" />
+        <p className="m-0 text-body-large text-note">{text}</p>
       </div>
     </section>
   );

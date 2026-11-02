@@ -33,7 +33,6 @@ export const isProvenanceDebugEnabled = () =>
   typeof window !== "undefined" &&
   new URLSearchParams(window.location.search).get("debug") === "provenance";
 
-const MONO = '"IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, monospace';
 
 /** Section wrapper: a small uppercase label above its content. */
 function Section({ label, children }: { label: string; children: React.ReactNode }) {
@@ -52,7 +51,7 @@ function Detail({ label, value }: { label: string; value?: string | number }) {
   if (value === undefined || value === "") return null;
   return (
     <span className="text-body-medium text-on-surface-variant">
-      {label} <span style={{ fontFamily: MONO }}>{value}</span>
+      {label} <span className="font-mono">{value}</span>
     </span>
   );
 }
@@ -76,8 +75,7 @@ function InspectorBody({ turn }: { turn: ChatTurn }) {
             {usedFacets.map((facet) => (
               <li
                 key={facet.facetId}
-                className="flex flex-col gap-0.5 pl-3"
-                style={{ borderLeft: "3px solid var(--color-theme-primary)" }}
+                className="flex flex-col gap-0.5 pl-3 border-l-3 border-theme-primary"
               >
                 <span className="text-body-medium">
                   <strong>{facet.provenance ?? "(unnamed source)"}</strong>
@@ -99,13 +97,7 @@ function InspectorBody({ turn }: { turn: ChatTurn }) {
                     target="_blank"
                     rel="noreferrer"
                     title={facet.url}
-                    className="text-body-medium block"
-                    style={{
-                      color: "var(--color-theme-primary)",
-                      overflow: "hidden",
-                      textOverflow: "ellipsis",
-                      whiteSpace: "nowrap",
-                    }}
+                    className="text-body-medium block truncate text-theme-primary"
                   >
                     {facet.url}
                   </a>
@@ -121,7 +113,7 @@ function InspectorBody({ turn }: { turn: ChatTurn }) {
           <ul className="m-0 p-0 list-none flex flex-col gap-1">
             {inspection.variables.map((variable) => (
               <li key={variable.dcid} className="text-body-medium">
-                <span style={{ fontFamily: MONO }}>{variable.dcid}</span>
+                <span className="font-mono">{variable.dcid}</span>
                 {variable.name && (
                   <span className="text-on-surface-variant"> — {variable.name}</span>
                 )}
@@ -139,8 +131,7 @@ function InspectorBody({ turn }: { turn: ChatTurn }) {
       {inspection.places.length > 0 && (
         <Section label={`Places (${inspection.places.length})`}>
           <p
-            className="m-0 text-body-medium"
-            style={{ fontFamily: MONO, wordBreak: "break-word" }}
+            className="m-0 text-body-medium font-mono wrap-anywhere"
           >
             {inspection.places.join(", ")}
           </p>
@@ -154,8 +145,7 @@ function InspectorBody({ turn }: { turn: ChatTurn }) {
               <li key={index} className="flex flex-col text-body-medium">
                 <span>{chart.title}</span>
                 <span
-                  className="text-on-surface-variant"
-                  style={{ fontFamily: MONO, wordBreak: "break-word" }}
+                  className="text-on-surface-variant font-mono wrap-anywhere"
                 >
                   {chart.variables.join(", ")}
                   {chart.places.length > 0 && ` @ ${chart.places.length} place(s)`}
@@ -174,20 +164,13 @@ function InspectorBody({ turn }: { turn: ChatTurn }) {
             {turn.toolCalls.map((call, index) => (
               <li key={index} className="flex flex-col gap-1">
                 <span className="text-body-medium">
-                  <span style={{ fontFamily: MONO }}>{call.name}</span>
+                  <span className="font-mono">{call.name}</span>
                   {call.status === "error" && (
-                    <span style={{ color: "var(--color-error-strong)" }}> · error</span>
+                    <span className="text-error-strong"> · error</span>
                   )}
                 </span>
                 <pre
-                  className="m-0 p-2 rounded text-body-medium"
-                  style={{
-                    fontFamily: MONO,
-                    background: "var(--color-surface-soft)",
-                    overflowX: "auto",
-                    whiteSpace: "pre-wrap",
-                    wordBreak: "break-word",
-                  }}
+                  className="m-0 p-2 rounded text-body-medium font-mono bg-surface-soft overflow-x-auto whitespace-pre-wrap wrap-anywhere"
                 >
                   {JSON.stringify(call.arguments, null, 2)}
                 </pre>
@@ -196,23 +179,14 @@ function InspectorBody({ turn }: { turn: ChatTurn }) {
                     <button
                       type="button"
                       onClick={() => setOpenResult(openResult === index ? null : index)}
-                      className="self-start text-label-large cursor-pointer bg-transparent p-0"
-                      style={{ color: "var(--color-theme-primary)", border: 0 }}
+                      className="self-start text-label-large text-theme-primary cursor-pointer bg-transparent p-0"
                     >
                       {openResult === index ? "Hide" : "Show"} raw response (
                       {call.result.length.toLocaleString()} chars)
                     </button>
                     {openResult === index && (
                       <pre
-                        className="m-0 p-2 rounded text-body-medium"
-                        style={{
-                          fontFamily: MONO,
-                          background: "var(--color-surface-soft)",
-                          maxHeight: 300,
-                          overflow: "auto",
-                          whiteSpace: "pre-wrap",
-                          wordBreak: "break-word",
-                        }}
+                        className="m-0 p-2 rounded text-body-medium font-mono bg-surface-soft max-h-75 overflow-auto whitespace-pre-wrap wrap-anywhere"
                       >
                         {call.result}
                       </pre>
@@ -267,7 +241,6 @@ export function ProvenanceInspector({ turn }: { turn: ChatTurn }) {
         aria-expanded={open}
         title="Inspect data sources"
         className="w-9 h-9 flex items-center justify-center rounded-full bg-transparent cursor-pointer hover:bg-button-hover transition-colors text-on-surface-variant"
-        style={{ border: 0 }}
       >
         <InspectIcon size="sm" />
       </button>
@@ -283,8 +256,7 @@ export function ProvenanceInspector({ turn }: { turn: ChatTurn }) {
             role="dialog"
             aria-modal="true"
             aria-label="Provenance inspector"
-            className="fixed top-0 right-0 h-full z-40 bg-surface border-l border-outline shadow-lg flex flex-col"
-            style={{ width: "min(560px, 100vw)" }}
+            className="fixed top-0 right-0 h-full w-full max-w-140 z-40 bg-surface border-l border-outline shadow-lg flex flex-col"
           >
             <header className="flex items-start justify-between gap-3 p-4 border-b border-outline shrink-0">
               <div className="flex flex-col gap-0.5 min-w-0">
@@ -299,7 +271,6 @@ export function ProvenanceInspector({ turn }: { turn: ChatTurn }) {
                 onClick={() => setOpen(false)}
                 aria-label="Close provenance inspector"
                 className="w-9 h-9 shrink-0 flex items-center justify-center rounded-full bg-transparent cursor-pointer hover:bg-button-hover transition-colors text-on-surface-variant text-title-medium"
-                style={{ border: 0 }}
               >
                 ×
               </button>

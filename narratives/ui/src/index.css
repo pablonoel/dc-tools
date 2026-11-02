@@ -91,12 +91,16 @@
      than in it (m3.material.io/components/tooltips). */
   --color-inverse-surface: #313033;
   --color-on-inverse-surface: #F4EFF4;
+  /* Actions on an inverse surface, such as a snackbar's button. */
+  --color-inverse-primary: #D0BCFF;
 
   /* Text — primary */
   --color-on-surface: var(--theme-text, #1B1C1D);
   --color-on-surface-variant: var(--theme-text-muted, #444746);
   --color-muted: #575B5F;
   --color-subtle: #747775;
+  /* Disclaimer note under each answer. */
+  --color-note: #5C5F5E;
   --color-placeholder: #8E918F;
 
   /* Text — table */

@@ -107,22 +107,6 @@ const REDUCED_MOTION_QUERY = "(prefers-reduced-motion: reduce)";
  */
 export const ANSWER_SETTLE_MAX_MS = 2000;
 
-const COLOR_BORDER = "var(--color-border)";
-/**
- * Per Figma 3427-16728 the content body fills the narrative surface — light gray in the
- * neutral theme, tinted blue (#F5FAFF) in the Base DC one.
- *
- * The body takes --color-surface-narrative rather than --color-surface-soft:
- * the narrative token exists so an instance can tint the answer tile without
- * moving every other soft surface, and SkeletonCard already paints with it. On
- * --color-surface-soft the card rendered blue while streaming and then flipped
- * to gray the moment the content replaced the skeleton.
- */
-const COLOR_BODY_BG = "var(--color-surface-narrative)";
-const COLOR_TONAL_CONTAINER = "var(--color-theme-container)";
-const COLOR_TONAL_CONTENT = "var(--color-on-theme-container)";
-const FONT_LABEL =
-  '"Google Sans Text", "Google Sans", Inter, system-ui, sans-serif';
 
 /** The full answer card: toolbar with export action, markdown body, charts, sources, and follow-ups. */
 export function AnswerPanel({
@@ -237,14 +221,11 @@ export function AnswerPanel({
     <CitationNumberingProvider value={numbering}>
     <div
       ref={panelRef}
-      className="self-start shrink-0 w-full max-w-4xl flex flex-col overflow-hidden"
-      style={{
-        border: `1px solid ${COLOR_BORDER}`,
-        borderRadius: 16,
-        // Outer takes the body color so the rounded corners of the
-        // body section match the card. Toolbar paints white on top.
-        background: COLOR_BODY_BG,
-      }}
+      // Outer takes the body color so the rounded corners of the body section
+      // match the card. The body fills surface-narrative rather than
+      // surface-soft (Figma 3427-16728): SkeletonCard paints with it too, so
+      // the card keeps its color when the answer replaces the skeleton.
+      className="self-start shrink-0 w-full max-w-4xl flex flex-col overflow-hidden border border-border rounded-card bg-surface-narrative"
     >
       {/* Toolbar header, shared with SkeletonCard. Only expose the toolbar
           pill once the turn is fully streamed — otherwise clicking it while
@@ -265,13 +246,9 @@ export function AnswerPanel({
       {/* Content body: everything after and between the text blocks stays
           hidden until the text has finished revealing. */}
       <div
-        className={`flex flex-col p-4 sm:p-6 motion-safe:[&>:not(.markdown-body)]:transition-opacity motion-safe:[&>:not(.markdown-body)]:duration-300${
+        className={`flex flex-col gap-4 p-4 sm:p-6 bg-surface-narrative motion-safe:[&>:not(.markdown-body)]:transition-opacity motion-safe:[&>:not(.markdown-body)]:duration-300${
           isRevealed ? "" : " motion-safe:[&>:not(.markdown-body)]:opacity-0"
         }`}
-        style={{
-          gap: 16,
-          background: COLOR_BODY_BG,
-        }}
       >
         {/* 1. The answer: text and chart blocks in emission order. */}
         <AnswerBlocks
@@ -441,19 +418,7 @@ function ToolbarExportPdfPill({
       onClick={onExport}
       disabled={busy}
       data-non-print="true"
-      className="inline-flex items-center cursor-pointer hover:opacity-90"
-      style={{
-        background: COLOR_TONAL_CONTAINER,
-        color: COLOR_TONAL_CONTENT,
-        border: 0,
-        borderRadius: 999,
-        padding: "6px 16px",
-        gap: 8,
-        fontFamily: FONT_LABEL,
-        fontSize: 14,
-        lineHeight: "20px",
-        fontWeight: 500,
-      }}
+      className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-theme-container text-on-theme-container text-label-large cursor-pointer hover:opacity-90"
       aria-label="Export PDF"
     >
       <ExportIcon size="xs" />

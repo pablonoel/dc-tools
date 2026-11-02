@@ -56,6 +56,10 @@ interface ChartTileProps {
 
 const MAX_CHARTS = 3;
 
+/** Columns for two or more charts: as many 320px-minimum tracks as fit. */
+const GRID_COLUMNS_CLASS =
+  "grid-cols-[repeat(auto-fit,minmax(min(100%,320px),1fr))]";
+
 /** Renders the agent's chart directive as a responsive grid of DC charts. */
 export function ChartTile({ config, onSettled }: ChartTileProps) {
   // Charts that reported no data of their own after mounting. The agent
@@ -112,14 +116,9 @@ export function ChartTile({ config, onSettled }: ChartTileProps) {
   return (
     <div
       /* No top margin: the answer card's own flex gap already spaces this. */
-      className="dc-charts-container"
-      style={{
-        display: "grid",
-        gridTemplateColumns: isGrid
-          ? "repeat(auto-fit, minmax(min(100%, 320px), 1fr))"
-          : "1fr",
-        gap: 24,
-      }}
+      className={`dc-charts-container grid gap-6 ${
+        isGrid ? GRID_COLUMNS_CLASS : "grid-cols-1"
+      }`}
     >
       {toRender.map((chart, index) => (
         <ChartCard
@@ -188,9 +187,8 @@ function ChartCard({
   // (.dc-chart-card) still target the card.
   return (
     <div
-      className="dc-chart-card"
+      className={`dc-chart-card${hidden ? " hidden" : ""}`}
       ref={cardRef}
-      style={hidden ? { display: "none" } : undefined}
     >
       <DataCommonsComponent tag={tag} apiroot={API_ROOT} {...attrs} />
     </div>

@@ -271,11 +271,11 @@ export function Tooltip({
             aria-hidden={!isRich}
             role={isRich ? "tooltip" : undefined}
             data-non-print="true"
-            className={
+            className={`fixed ${
               isRich
                 ? "dc-tooltip-rich"
                 : `dc-tooltip${isMultiline ? " dc-tooltip-multiline" : ""}`
-            }
+            }${coords ? "" : " invisible"}`}
             onPointerEnter={
               isRich
                 ? () => {
@@ -291,13 +291,9 @@ export function Tooltip({
                   }
                 : undefined
             }
-            style={{
-              position: "fixed",
-              top: coords?.top ?? 0,
-              left: coords?.left ?? 0,
-              // Hidden for the single frame between mount and measurement.
-              visibility: coords ? "visible" : "hidden",
-            }}
+            // Measured at runtime; `invisible` above hides the single frame
+            // between mount and measurement.
+            style={{ top: coords?.top ?? 0, left: coords?.left ?? 0 }}
           >
             {isRich ? (
               <>

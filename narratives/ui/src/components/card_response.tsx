@@ -68,8 +68,6 @@ interface ResponseCardProps {
   revealing?: boolean;
 }
 
-const LINK_COLOR = "var(--color-theme-primary)";
-
 /** Renders the agent's answer text as markdown, with citation chips. */
 export function ResponseCard({
   title,
@@ -181,8 +179,7 @@ function ReactMarkdownInner({
                 href={href}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="hover:underline"
-                style={{ color: LINK_COLOR }}
+                className="text-theme-primary hover:underline"
               >
                 <PlainTextContext.Provider value={true}>
                   {children}

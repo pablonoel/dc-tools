@@ -20,11 +20,6 @@
 
 import { useEffect } from 'react';
 
-const COLOR_SURFACE = '#322F35';
-const COLOR_TEXT = '#F5EFF7';
-const FONT_STACK =
-  '"Google Sans Text", "Google Sans", Inter, system-ui, sans-serif';
-
 /** How long the snackbar stays up. M3 guidance is 4-10s for a short message. */
 const VISIBLE_MS = 5000;
 
@@ -54,25 +49,13 @@ export function Toast({
     return () => window.clearTimeout(timer);
   }, [onDismiss]);
 
+  const paddingClass = actionLabel ? 'py-1.5 pr-2 pl-4' : 'py-3.5 px-4';
   return (
     <div
       role="status"
       aria-live="polite"
       data-non-print="true"
-      className="fixed left-1/2 bottom-24 z-50 flex items-center shadow-lg"
-      style={{
-        transform: 'translateX(-50%)',
-        background: COLOR_SURFACE,
-        color: COLOR_TEXT,
-        borderRadius: 4,
-        padding: actionLabel ? '6px 8px 6px 16px' : '14px 16px',
-        gap: 8,
-        minHeight: 48,
-        maxWidth: 'min(560px, calc(100vw - 32px))',
-        fontFamily: FONT_STACK,
-        fontSize: 14,
-        lineHeight: '20px',
-      }}
+      className={`fixed left-1/2 bottom-24 z-50 -translate-x-1/2 flex items-center gap-2 min-h-12 max-w-[min(35rem,calc(100vw-2rem))] ${paddingClass} rounded-sm shadow-lg bg-inverse-surface text-on-inverse-surface text-body-medium`}
     >
       <span className="flex-1">{message}</span>
       {actionLabel && (
@@ -82,16 +65,7 @@ export function Toast({
             onAction?.();
             onDismiss();
           }}
-          style={{
-            background: 'transparent',
-            border: 0,
-            color: '#D0BCFF',
-            fontFamily: FONT_STACK,
-            fontSize: 14,
-            fontWeight: 500,
-            padding: '10px 12px',
-            borderRadius: 4,
-          }}
+          className="px-3 py-2.5 rounded-sm bg-transparent text-inverse-primary text-label-large"
         >
           {actionLabel}
         </button>

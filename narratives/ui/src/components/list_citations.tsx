@@ -29,12 +29,6 @@ import { citationAnchorId, displayCitationNumber } from "./chip_citation";
  * so two answers citing one source do not both claim the same anchor.
  */
 
-const COLOR_TITLE = "var(--color-on-surface)";
-const COLOR_BODY = "var(--color-on-surface)";
-const COLOR_LINK = "var(--color-theme-primary)";
-const FONT_STACK =
-  '"Google Sans Text", "Google Sans", Inter, system-ui, sans-serif';
-
 /** The attribution every citation carries. */
 const PROCESSING_NOTE = "with minor processing by Data Commons";
 
@@ -85,28 +79,12 @@ export function CitationsList({
     <section aria-labelledby="citations-heading">
       <h2
         id="citations-heading"
-        className="font-medium"
-        style={{
-          fontFamily: '"Google Sans", "Google Sans Text", sans-serif',
-          fontSize: 22,
-          lineHeight: "28px",
-          color: COLOR_TITLE,
-          fontWeight: 500,
-          margin: 0,
-          paddingTop: 12,
-        }}
+        className="m-0 pt-3 text-title-large-emphasized text-on-surface"
       >
         {CITATIONS_HEADING}
       </h2>
       <ol
-        className="list-none p-0 m-0 mt-2 flex flex-col gap-1"
-        style={{
-          fontFamily: FONT_STACK,
-          fontSize: 16,
-          lineHeight: "24px",
-          fontWeight: 500,
-          color: COLOR_BODY,
-        }}
+        className="list-none p-0 m-0 mt-2 flex flex-col gap-1 text-body-large-emphasized text-on-surface"
       >
         {sources.map((source, index) => {
           const shown = displayCitationNumber(index + 1, numbers);
@@ -121,20 +99,13 @@ export function CitationsList({
               {/* Long dataset names and URLs often have no spaces; allow them
                   to break mid-string. `minWidth: 0` lets this flex child
                   shrink below its content width instead of overflowing. */}
-              <span
-                style={{
-                  minWidth: 0,
-                  overflowWrap: "anywhere",
-                  wordBreak: "break-word",
-                }}
-              >
+              <span className="min-w-0 wrap-anywhere">
                 {lead && `${lead} `}(
                 <a
                   href={source.url}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="hover:underline"
-                  style={{ color: COLOR_LINK }}
+                  className="text-theme-primary hover:underline"
                 >
                   {citationUrlLabel(source.url)}
                 </a>

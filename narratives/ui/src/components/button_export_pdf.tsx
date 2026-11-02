@@ -28,11 +28,6 @@ interface ExportPdfButtonProps {
   label?: string;
 }
 
-const COLOR_FILL = 'var(--color-theme-container)';
-const COLOR_TEXT = 'var(--color-on-theme-container)';
-const FONT_STACK =
-  '"Google Sans Text", "Google Sans", Inter, system-ui, sans-serif';
-
 /** Tonal "Export PDF" pill that prints the enclosing answer panel to PDF. */
 export function ExportPdfButton({
   onExport,
@@ -42,30 +37,14 @@ export function ExportPdfButton({
   const internalRef = useRef<HTMLButtonElement>(null);
 
   return (
-    <div
-      className="flex items-center"
-      style={{ height: 48 }}
-      data-non-print="true"
-    >
+    <div className="flex items-center h-12" data-non-print="true">
       <Tooltip label="Download this answer as a PDF">
         <button
           ref={internalRef}
           type="button"
           onClick={onExport}
           disabled={busy}
-          className="inline-flex items-center justify-center cursor-pointer transition-opacity hover:opacity-90 focus-visible:outline-2 focus-visible:outline-offset-2 disabled:opacity-60"
-          style={{
-            backgroundColor: COLOR_FILL,
-            color: COLOR_TEXT,
-            border: 0,
-            borderRadius: 100,
-            padding: '10px 16px',
-            gap: 8,
-            fontFamily: FONT_STACK,
-            fontSize: 14,
-            lineHeight: '20px',
-            fontWeight: 500,
-          }}
+          className="inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-full bg-theme-container text-on-theme-container text-label-large cursor-pointer transition-opacity hover:opacity-90 focus-visible:outline-2 focus-visible:outline-offset-2 disabled:opacity-60"
         >
           <ExportIcon />
           <span>{busy ? 'Preparing…' : label}</span>
